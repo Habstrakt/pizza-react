@@ -1,0 +1,38 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "Пепперони",
+      "category": "Пицца",
+      "imageUrl": "https://dodopizza.azureedge.net/static/Img/Products/f035c7f46c0844069722f2bb3ee9f113_584x584.jpeg",
+      "description": "Пицца с пепперони и сыром моцарелла",
+      "sizes": [26, 30, 40],
+      "prices": [350, 500, 650]
+    },
+    {
+      "id": 2,
+      "name": "Маргарита",
+      "category": "Пицца",
+      "imageUrl": "https://dodopizza.azureedge.net/static/Img/Products/Pizza/ru-RU/d48003cd-902c-420d-9f28-92d9dc5f73b4.jpg",
+      "description": "Пицца с томатным соусом и сыром моцарелла",
+      "sizes": [26, 30, 40],
+      "prices": [300, 450, 500]
+    },
+    {
+      "id": 3,
+      "name": "Салат Цезарь с курицей",
+      "category": "Закуски",
+      "imageUrl": "https://dodopizza-a.akamaihd.net/static/Img/Products/8ed02557247946bc83d3c0af51a8d8a9_584x584.jpeg",
+      "description": "Салат с курицей, сыром и соусом цезарь",
+      "prices": [150]
+    },
+    {
+      "id": 4,
+      "name": "Кола",
+      "category": "Напитки",
+      "imageUrl": "https://dodopizza-a.akamaihd.net/static/Img/Products/dc74c00bc0634933ba7194b99a164094_584x584.jpeg",
+      "description": "Безалкогольный газированный напиток",
+      "prices": [50]
+    }
+  ]
+}
