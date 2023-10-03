@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { ChangeEvent, useState, FormEvent } from "react";
 import styles from "./Checkout.module.css";
 import classNames from "classnames";
 import cartImage from "../assets/img/cart.png";
@@ -12,6 +12,59 @@ import {
   setClientPhone,
 } from "../redux/pizzaSlice.tsx";
 import { Link } from "react-router-dom";
+
+interface PizzaState {
+  productsCart: {
+    id: number;
+    name: string;
+    imageUrl: string;
+    selectedSize: number[];
+    selectedPrice: number[];
+    quantity: number;
+  }[];
+}
+
+interface PizzaRootState {
+  pizza: PizzaState;
+}
+
+interface DeliveryMethodState {
+  deliveryInfo: {
+    deliveryMethod: string;
+  };
+}
+
+interface PaymentRoot {
+  pizza: PaymentMethodState;
+}
+
+interface PaymentMethodState {
+  deliveryInfo: {
+    paymentMethod: string;
+  };
+}
+
+interface DeliveryInfo {
+  deliveryInfo: {
+    deliveryMethod: string;
+    paymentMethod: string;
+    totalPrice: number;
+    phone: string;
+    name: string;
+    email: string;
+    address: string;
+    house: number;
+    apartment: number;
+  };
+}
+
+interface DeliveryInfoRoot {
+  pizza: DeliveryInfo;
+}
+
+interface DeliveryMethodRootState {
+  pizza: DeliveryMethodState;
+}
 
 const Checkout: React.FC = () => {
   const dispatch = useDispatch();
@@ -32,17 +85,21 @@ const Checkout: React.FC = () => {
 
   const [isPhoneValid, setIsPhoneValid] = useState(false);
 
-  const productCart = useSelector((state) => state.pizza.productsCart);
+  const productCart = useSelector(
+    (state: PizzaRootState) => state.pizza.productsCart,
+  );
 
   const storeDeliveryMethod = useSelector(
-    (state) => state.pizza.deliveryInfo.deliveryMethod,
+    (state: DeliveryMethodRootState) => state.pizza.deliveryInfo.deliveryMethod,
   );
 
   const storePaymentMethod = useSelector(
-    (state) => state.pizza.deliveryInfo.paymentMethod,
+    (state: PaymentRoot) => state.pizza.deliveryInfo.paymentMethod,
   );
 
-  const storeDeliveryInfo = useSelector((state) => state.pizza.deliveryInfo);
+  const storeDeliveryInfo = useSelector(
+    (state: DeliveryInfoRoot) => state.pizza.deliveryInfo,
+  );
 
   function validateName() {
     const isNameLengthValid = nameValue.length > 0;
@@ -84,7 +141,7 @@ const Checkout: React.FC = () => {
     dispatch(updatePaymentMethod(paymentMethods[index]));
   }
 
-  function submitForm(e) {
+  function submitForm(e: FormEvent) {
     e.preventDefault();
 
     if (!phoneValue && !nameValue) {
@@ -158,8 +215,8 @@ const Checkout: React.FC = () => {
                               mask="+7(***)***-**-**"
                               placeholder="+7(___)___-__-__"
                               defaultValue={phoneValue}
-                              onChange={(event) =>
-                                setPhoneValue(event.target.value)
+                              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                                setPhoneValue(e.target.value)
                               }
                               onBlur={validatePhone}
                             ></InputMask>
@@ -317,7 +374,7 @@ const Checkout: React.FC = () => {
                         >
                           Подтвердить заказ
                         </button>
-                        <Link to="/" className={styles.return}>
+                        <Link to="/pizza-react" className={styles.return}>
                           Вернуться в меню
                         </Link>
                       </div>
@@ -330,7 +387,10 @@ const Checkout: React.FC = () => {
         </div>
       ) : (
         <div>
-          <Link to="/" className={classNames("m-auto", "mt-5", styles.return)}>
+          <Link
+            to="/pizza-react"
+            className={classNames("m-auto", "mt-5", styles.return)}
+          >
             Вернуться в меню
           </Link>
         </div>

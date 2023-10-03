@@ -5,18 +5,54 @@ import { Link } from "react-router-dom";
 import { calculatedTotalPrice } from "../redux/pizzaSlice.tsx";
 import { useEffect } from "react";
 
+interface PizzaState {
+  productsCart: {
+    id: number;
+    name: string;
+    imageUrl: string;
+    selectedSize: number[];
+    selectedPrice: number[];
+    quantity: number;
+  }[];
+}
+
+interface PizzaRootState {
+  pizza: PizzaState;
+}
+
+interface DeliveryState {
+  deliveryInfo: {
+    totalPrice: number;
+  };
+}
+
+interface DeliveryRootState {
+  pizza: DeliveryState;
+}
+
+interface Product {
+  id: number;
+  name: string;
+  imageUrl: string;
+  selectedSize: number[];
+  selectedPrice: number[];
+  quantity: number;
+}
+
 const Header: React.FC = () => {
   const dispatch = useDispatch();
 
-  const productCart = useSelector((state) => state.pizza.productsCart);
+  const productCart = useSelector(
+    (state: PizzaRootState) => state.pizza.productsCart,
+  );
 
   const totalPrice = useSelector(
-    (state) => state.pizza.deliveryInfo.totalPrice,
+    (state: DeliveryRootState) => state.pizza.deliveryInfo.totalPrice,
   );
 
   function totalQuantity() {
     return productCart.reduce(
-      (quantity, product) => quantity + product.quantity,
+      (quantity: number, product: Product) => quantity + product.quantity,
       0,
     );
   }
@@ -59,7 +95,7 @@ const Header: React.FC = () => {
             </svg>
           </div>
           <div className={styles.cart}>
-            <Link to="/cart" className={styles.cartItems}>
+            <Link to="/pizza-react/cart" className={styles.cartItems}>
               <div className={styles.cartIco}>
                 <svg
                   width="18"

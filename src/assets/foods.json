@@ -24,6 +24,7 @@
       "category": "Закуски",
       "imageUrl": "https://dodopizza-a.akamaihd.net/static/Img/Products/8ed02557247946bc83d3c0af51a8d8a9_584x584.jpeg",
       "description": "Салат с курицей, сыром и соусом цезарь",
+      "sizes": [null],
       "prices": [150]
     },
     {
@@ -32,6 +33,7 @@
       "category": "Напитки",
       "imageUrl": "https://dodopizza-a.akamaihd.net/static/Img/Products/dc74c00bc0634933ba7194b99a164094_584x584.jpeg",
       "description": "Безалкогольный газированный напиток",
+      "sizes": [null],
       "prices": [50]
     }
   ]

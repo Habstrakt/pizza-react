@@ -11,22 +11,49 @@ import {
   calculatedTotalPrice,
 } from "../redux/pizzaSlice.tsx";
 
-interface ProductCart {
+interface PizzaState {
+  productsCart: {
+    id: number;
+    name: string;
+    imageUrl: string;
+    selectedSize: number[];
+    selectedPrice: number[];
+    quantity: number;
+  }[];
+}
+
+interface PizzaRootState {
+  pizza: PizzaState;
+}
+
+interface DeliveryState {
+  deliveryInfo: {
+    totalPrice: number;
+  };
+}
+
+interface DeliveryRootState {
+  pizza: DeliveryState;
+}
+
+interface Product {
   id: number;
   name: string;
   imageUrl: string;
-  selectedSize: number;
-  selectedPrice: number;
+  selectedSize: number[];
+  selectedPrice: number[] | number;
   quantity: number;
 }
 
 const Cart: React.FC = () => {
   const dispatch = useDispatch();
 
-  const productCart = useSelector((state) => state.pizza.productsCart);
+  const productCart = useSelector(
+    (state: PizzaRootState) => state.pizza.productsCart,
+  );
 
   const totalPrice = useSelector(
-    (state) => state.pizza.deliveryInfo.totalPrice,
+    (state: DeliveryRootState) => state.pizza.deliveryInfo.totalPrice,
   );
 
   useEffect(() => {
@@ -59,7 +86,7 @@ const Cart: React.FC = () => {
           <div className={styles.zakaz}>Состав заказа</div>
           <div className="cart_wrapper">
             <div className={styles.cartContent}>
-              {productCart.map((product: ProductCart, index: number) => (
+              {productCart.map((product: Product, index: number) => (
                 <div
                   key={index}
                   className={classNames("d-flex", styles.cartItem)}
@@ -102,13 +129,15 @@ const Cart: React.FC = () => {
                     </div>
                   </div>
                   <div className={styles.price}>
-                    <span>{product.selectedPrice * product.quantity} ₽</span>
+                    <span>
+                      {(product.selectedPrice as number) * product.quantity} ₽
+                    </span>
                   </div>
                 </div>
               ))}
             </div>
             <div className={classNames("d-flex", styles.returnWrap)}>
-              <Link to="/" className={styles.return}>
+              <Link to="/pizza-react" className={styles.return}>
                 Вернуться в меню
               </Link>
             </div>
@@ -122,7 +151,10 @@ const Cart: React.FC = () => {
                       {totalPrice} ₽
                     </strong>
                   </div>
-                  <Link to="/checkout" className={styles.checkoutCart}>
+                  <Link
+                    to="/pizza-react/checkout"
+                    className={styles.checkoutCart}
+                  >
                     Перейти к оформлению
                   </Link>
                 </div>
@@ -133,7 +165,10 @@ const Cart: React.FC = () => {
       ) : (
         <div className="col-md-10 mt-5">
           <p className={styles.emptyCart}>Ваша корзина пока пуста.</p>
-          <Link to="/" className={classNames("mx-auto", styles.return)}>
+          <Link
+            to="/pizza-react"
+            className={classNames("mx-auto", styles.return)}
+          >
             Вернуться в меню
           </Link>
         </div>

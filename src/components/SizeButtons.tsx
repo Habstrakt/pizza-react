@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import classNames from "classnames";
 
 interface SizeButtonsProps {
@@ -25,20 +25,30 @@ const SizeButtons: React.FC<SizeButtonsProps> = ({
     onSizeSelected(size, productId, prices[index]);
   };
 
+  useEffect(() => {
+    if (sizes && sizes.length > 0 && onSizeSelected) {
+      const firstSize: number = sizes[0];
+      const firstPrice: number = prices[0];
+      onSizeSelected(firstSize, productId, firstPrice);
+    }
+  }, []);
+
   return (
     <>
-      {sizes?.map((size, index) => (
-        <button
-          type="button"
-          className={classNames("btn bg-warning position-relative me-3", {
-            active: index === activeSizeIndex,
-          })}
-          key={size}
-          onClick={() => handleButtonClick(size, index)}
-        >
-          {size}
-        </button>
-      ))}
+      {sizes
+        ?.filter((size: number) => size !== 0)
+        .map((size: number, index) => (
+          <button
+            type="button"
+            className={classNames("btn bg-warning position-relative me-3", {
+              active: index === activeSizeIndex,
+            })}
+            key={size}
+            onClick={() => handleButtonClick(size, index)}
+          >
+            {size}
+          </button>
+        ))}
     </>
   );
 };

@@ -1,5 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+interface Product {
+  id: number;
+  name: string;
+  imageUrl: string;
+  selectedSize: number[];
+  selectedPrice: number[] | null[];
+  quantity: number;
+}
+
 const loadInitialState = () => {
   const localStorageData = localStorage.getItem("cart");
 
@@ -35,7 +44,7 @@ const pizzaSlice = createSlice({
       const newProduct = action.payload;
 
       const existingProduct = state.productsCart.find(
-        (product) =>
+        (product: { id: number; selectedSize: number }) =>
           product.id === newProduct.id &&
           product.selectedSize === newProduct.selectedSize,
       );
@@ -53,7 +62,7 @@ const pizzaSlice = createSlice({
       const productId = action.payload;
 
       const product = state.productsCart.find(
-        (product) => product.id === productId,
+        (product: { id: number }) => product.id === productId,
       );
 
       if (product) {
@@ -66,7 +75,7 @@ const pizzaSlice = createSlice({
       const productId = action.payload;
 
       const product = state.productsCart.find(
-        (product) => product.id === productId,
+        (product: { id: number }) => product.id === productId,
       );
 
       if (product) {
@@ -74,7 +83,7 @@ const pizzaSlice = createSlice({
 
         if (product.quantity === 0) {
           const productIndex = state.productsCart.findIndex(
-            (product) => product.id === productId,
+            (product: { id: number }) => product.id === productId,
           );
           state.productsCart.splice(productIndex, 1);
         }
@@ -85,7 +94,9 @@ const pizzaSlice = createSlice({
 
     calculatedTotalPrice: (state) => {
       state.deliveryInfo.totalPrice = state.productsCart.reduce(
-        (price, product) => price + product.selectedPrice * product.quantity,
+        (price: number, product: Product) =>
+          price +
+          (product.selectedPrice as unknown as number) * product.quantity,
         0,
       );
     },

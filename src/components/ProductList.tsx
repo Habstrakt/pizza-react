@@ -10,16 +10,16 @@ import { addProductToCart, setProductsLS } from "../redux/pizzaSlice";
 import SizeButtons from "./SizeButtons";
 
 interface Product {
+  selectedSize: number[];
+  selectedPrice: number[];
+  quantity: number;
   id: number;
   name: string;
   category: string;
   imageUrl: string;
   description: string;
-  sizes: number[];
+  sizes: number[] | null[];
   prices: number[];
-  selectedSize: number;
-  selectedPrice: number;
-  quantity: number;
 }
 
 interface ProductCart {
@@ -29,6 +29,16 @@ interface ProductCart {
   selectedSize: number;
   selectedPrice: number;
   quantity: number;
+}
+
+interface ProductFromData {
+  id: number;
+  name: string;
+  category: string;
+  imageUrl: string;
+  description: string;
+  sizes: number[] | null[];
+  prices: number[];
 }
 
 const categoryProducts = [
@@ -47,9 +57,11 @@ const ProductList: React.FC = () => {
 
   const [selectedCategory, setSelectedCategory] = useState("");
 
-  const [products, setProducts] = useState<Product[]>([]);
+  const [, setProducts] = useState<Product[]>([]);
 
-  const localStorageData = JSON.parse(localStorage.getItem("cart"));
+  // const localStorageData = JSON.parse(localStorage.getItem("cart"));
+  const rawData = localStorage.getItem("cart");
+  const localStorageData = rawData ? JSON.parse(rawData) : null;
 
   const handleSizeBtn = (
     selectedSize: number,
@@ -62,23 +74,30 @@ const ProductList: React.FC = () => {
     }));
   };
 
+  const getCategoryProducts = () => {
+    return foodsData.products
+      .filter(
+        (item: ProductFromData) =>
+          selectedCategory === "Все" || item.category === selectedCategory,
+      )
+      .map((item: ProductFromData) => ({
+        ...item,
+        selectedSize: [] as number[],
+        selectedPrice: [] as number[],
+        quantity: 0,
+      }));
+  };
+
+  useEffect(() => {
+    setProducts(getCategoryProducts());
+  }, [selectedCategory]);
+
   useEffect(() => {
     if (localStorageData) {
       dispatch(setProductsLS(localStorageData));
     }
     setSelectedCategory("Все");
   }, []);
-
-  useEffect(() => {
-    setProducts(getCategoryProducts());
-  }, [selectedCategory]);
-
-  const getCategoryProducts = () => {
-    return foodsData.products.filter(
-      (item) =>
-        selectedCategory === "Все" || item.category === selectedCategory,
-    );
-  };
 
   const handleAddCart = (item: ProductCart) => {
     dispatch(
@@ -126,7 +145,7 @@ const ProductList: React.FC = () => {
                 </div>
 
                 <SizeButtons
-                  sizes={item.sizes}
+                  sizes={item.sizes.map((size) => size ?? 0)}
                   prices={item.prices}
                   productId={item.id}
                   onSizeSelected={handleSizeBtn}
